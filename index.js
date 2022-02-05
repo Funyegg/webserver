@@ -20,7 +20,7 @@ server.on('connection', res => {
     data = data.toString();
     if (data.includes("Host: ")) {
       hostd = data.substring(data.indexOf("Host: "), data.length);
-      host = hostd.substring(hostd.indexOf("Host: ") + 6, hostd.indexOf("\n") - 1);
+      host = hostd.substring(hostd.indexOf("Host: ") + 6, hostd.indexOf("\n") - 1).replace("www.","");
     }
     if (hostenabled == true) {
       if (hosts.includes(host)){
@@ -52,6 +52,10 @@ server.on('connection', res => {
       res.write(head + fs.readFileSync(dir + site + get).toString().replace(/&NTShost/g, host).replace(/&NTSget/g,get).replace(/&NTSip/g,res.remoteAddress));
 
 
+    }else if(extens(get) == ".js"){
+      res.write("HTTP/1.1\n\nContent-Type: text/javascript\n\n");
+      
+res.write(fs.readFileSync(dir + site + get));
     }else{
 res.write('HTTP/1.1 200 OK\n\n');
 res.write(fs.readFileSync(dir + site + get));
